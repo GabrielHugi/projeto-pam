@@ -1,0 +1,18 @@
+{
+  "brainrots" : [
+    {
+      "name": "pipi kiwi",
+      "skill": "tail attack",
+      "height": "1.3m",
+      "width": "1.2m",
+      "weight": "110kg"
+    },
+    {
+      "name": "tralalero tralala",
+      "skill": "bite",
+      "height": "1.15m",
+      "widht": "3.5m",
+      "weight": "340kg"
+    }
+  ]
+}
