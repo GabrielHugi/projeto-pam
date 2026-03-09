@@ -3,107 +3,12 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, Modal, TextInput } 
 import styles from "../styles/styles";
 import React, { useEffect, useState } from 'react';
 
+const dbUrl = "https://3d77-2804-1450-fec8-8900-c10b-40b2-4385-9306.ngrok-free.app/brainrots";
+
 export default function BrainrotsScreen() {
 
   // esse use state com os bgl já colocado é porque no pc da escola não vai funcionar o db
-  const [brainrots, setBrainrots] = useState([
-    {
-      "id": 1,
-      "name": "pipi kiwi",
-      "skill": "tail attack",
-      "height": "1.3m",
-      "width": "1.2m",
-      "weight": "110kg"
-    },
-    {
-      "id": 2,
-      "name": "tralalero tralala",
-      "skill": "bite",
-      "height": "1.15m",
-      "width": "3.5m",
-      "weight": "340kg"
-    },
-    {
-      "id": 3,
-      "name": "pipi kiwi",
-      "skill": "tail attack",
-      "height": "1.3m",
-      "width": "1.2m",
-      "weight": "110kg"
-    },
-    {
-      "id": 4,
-      "name": "tralalero tralala",
-      "skill": "bite",
-      "height": "1.15m",
-      "width": "3.5m",
-      "weight": "340kg"
-    },
-    {
-      "id": 5,
-      "name": "pipi kiwi",
-      "skill": "tail attack",
-      "height": "1.3m",
-      "width": "1.2m",
-      "weight": "110kg"
-    },
-    {
-      "id": 6,
-      "name": "tralalero tralala",
-      "skill": "bite",
-      "height": "1.15m",
-      "width": "3.5m",
-      "weight": "340kg"
-    },
-    {
-      "id": 7,
-      "name": "pipi kiwi",
-      "skill": "tail attack",
-      "height": "1.3m",
-      "width": "1.2m",
-      "weight": "110kg"
-    },
-    {
-      "id": 8,
-      "name": "tralalero tralala",
-      "skill": "bite",
-      "height": "1.15m",
-      "width": "3.5m",
-      "weight": "340kg"
-    },
-    {
-      "id": 9,
-      "name": "pipi kiwi",
-      "skill": "tail attack",
-      "height": "1.3m",
-      "width": "1.2m",
-      "weight": "110kg"
-    },
-    {
-      "id": 10,
-      "name": "tralalero tralala",
-      "skill": "bite",
-      "height": "1.15m",
-      "width": "3.5m",
-      "weight": "340kg"
-    },
-    {
-      "id": 11,
-      "name": "pipi kiwi",
-      "skill": "tail attack",
-      "height": "1.3m",
-      "width": "1.2m",
-      "weight": "110kg"
-    },
-    {
-      "id": 12,
-      "name": "tralalero tralala",
-      "skill": "bite",
-      "height": "1.15m",
-      "width": "3.5m",
-      "weight": "340kg"
-    }
-  ]);
+  const [brainrots, setBrainrots] = useState([]);
 
   const [isBrainrotAddFormVisible, setIsBrainrotAddFormVisible] = useState(false);
   const [isBrainrotEditFormVisible, setIsBrainrotEditFormVisible] = useState(false);
@@ -119,7 +24,7 @@ export default function BrainrotsScreen() {
   // fetch não vai funcionar porque pc e celular usam internets diferentes (na escola)
   //
   useEffect(() => {
-    fetch('http://localhost:3500/brainrots')
+    fetch(dbUrl)
       .then(response => response.json())
       .then(data => setBrainrots(data))
       .catch(error => console.error(error));
@@ -130,7 +35,7 @@ export default function BrainrotsScreen() {
   // essa coisa não ta dando certo mas eu sei porque então vou concertar for real :sigma:
   useEffect(() => {
     // esse if concerta o problema de adicionar multiplos isAdd a cada reset da tela, só adicionando se não já tiver no final o isAdd.
-    if (!brainrots[brainrots.length-1].isAdd) setBrainrots([...brainrots, {isAdd: true}]);
+    if (brainrots.length > 0 && !brainrots[brainrots.length-1].isAdd) setBrainrots([...brainrots, {isAdd: true}]);
   }, [brainrots]);
 
   function addNewBrainrot() {
@@ -141,7 +46,7 @@ export default function BrainrotsScreen() {
   async function saveBrainrot() {
     try {
       // adicionario o novo bnrainrot na db, no pc da escola não vai funcionar, só se usar ngrok mas ai sei lá se vou fazer isso
-      const response = await fetch('http://localhost:3500/brainrots', {
+      const response = await fetch(dbUrl, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -156,8 +61,14 @@ export default function BrainrotsScreen() {
       //
 
       // tira o isadd e adiciona o novo brainrot
-      const listWithoutAddButton = brainrots.filter(item => !item.isAdd);
-      setBrainrots([...listWithoutAddButton, formData]);
+      //const listWithoutAddButton = brainrots.filter(item => !item.isAdd);
+      //setBrainrots([...listWithoutAddButton, formData]);
+      // em vez disso só le os dados do bd
+      fetch(dbUrl)
+        .then(response => response.json())
+        .then(data => setBrainrots(data))
+        .catch(error => console.error(error));
+
       
       // limpa a var do formulario e fecha o formulario
       setFormData({ name: '', skill: '', height: '', width: '', weight: '' });
@@ -177,19 +88,6 @@ export default function BrainrotsScreen() {
   // Saves the data and closes the popup
   async function editBrainrot() {
     try {
-      // muda o brainrot na db, no pc da escola não vai funcionar, só se usar ngrok mas ai sei lá se vou fazer isso
-      const response = await fetch(`http://localhost:3500/brainrots/${formId}`, {
-        method: 'PATCH',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData), 
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save data to database');
-      }
       //
 
       // edita
@@ -199,11 +97,11 @@ export default function BrainrotsScreen() {
           return {
             ...item, // copia todos os dados antigos deste item
             // sbstitui só o que tiver alguma coisa no form data
-            name: formData.name !== '' ? formData.name : item.name,
-            height: formData.height !== '' ? formData.height : item.height,
-            width: formData.width !== '' ? formData.width : item.width,
-            weight: formData.weight !== '' ? formData.weight : item.weight,
-            skill: formData.skill !== '' ? formData.skill : item.skill,
+            name: formData.name != '' ? formData.name : item.name,
+            height: formData.height != '' ? formData.height : item.height,
+            width: formData.width != '' ? formData.width : item.width,
+            weight: formData.weight != '' ? formData.weight : item.weight,
+            skill: formData.skill != '' ? formData.skill : item.skill,
             id: formId
           };
         }
@@ -211,6 +109,20 @@ export default function BrainrotsScreen() {
         // se não é o que a gente quer então a gente não faz nada
         return item;
       });
+
+      // muda o brainrot na db, no pc da escola não vai funcionar, só se usar ngrok mas ai sei lá se vou fazer isso
+      const response = await fetch(`${dbUrl}/${formId}`, {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(list.find(item => item.id == formId)), 
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save data to database');
+      }
 
       setBrainrots(list);
       
@@ -227,7 +139,7 @@ export default function BrainrotsScreen() {
   async function deleteBrainrot() {
     try {
       // muda o brainrot na db, no pc da escola não vai funcionar, só se usar ngrok mas ai sei lá se vou fazer isso
-      const response = await fetch(`http://localhost:3500/brainrots/${formId}`, {
+      const response = await fetch(`${dbUrl}/${formId}`, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',

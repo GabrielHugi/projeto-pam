@@ -1,18 +1,29 @@
 {
-  "brainrots" : [
+  "brainrots": [
     {
+      "id": "007b",
       "name": "pipi kiwi",
-      "skill": "tail attack",
-      "height": "1.3m",
-      "width": "1.2m",
-      "weight": "110kg"
+      "skill": "be a loser",
+      "height": "idk",
+      "width": "idc",
+      "weight": "sybau"
     },
     {
-      "name": "tralalero tralala",
-      "skill": "bite",
-      "height": "1.15m",
-      "widht": "3.5m",
-      "weight": "340kg"
+      "id": "5645",
+      "name": "mr sigma",
+      "skill": "ohio",
+      "height": "rizz",
+      "width": "d",
+      "weight": "d"
+    },
+    {
+      "id": "210b",
+      "name": "eazy",
+      "skill": "",
+      "height": "",
+      "width": "",
+      "weight": ""
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
